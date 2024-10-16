@@ -1,3 +1,5 @@
 {
-  "cSpell.words": ["Taskify"]
+  "cSpell.words": ["Taskify"],
+  "indentRainbow.ignoreErrorLanguages": ["*"],
+  "indentRainbow.colorOnWhiteSpaceOnly": true
 }
