@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -29,6 +29,7 @@
     "sonner": "^1.7.0",
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
+    "unsplash-js": "^7.0.19",
     "usehooks-ts": "^3.1.0",
     "zod": "^3.23.8",
     "zustand": "^5.0.0"
