@@ -1,44 +1,34 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
 
-// Define protected routes using a route matcher
-const isProtectedRoute = createRouteMatcher([
-  "/select-org(.*)",
-  "/organization(.*)",
-]);
+// This example protects all routes including api/trpc routes
+// Please edit this to allow other routes to be public as needed.
+// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
+export default authMiddleware({
+  publicRoutes: ["/", "/api/webhook"],
+  afterAuth(auth, req) {
+    if (auth.userId && auth.isPublicRoute) {
+      let path = "/select-org";
 
-// Middleware to handle authentication and redirection
-export default clerkMiddleware((auth, req) => {
-  // If the user is authenticated and the route is not protected
-  if (auth().userId && !isProtectedRoute(req)) {
-    let path = "/select-org";
-    // If the user is part of an organization, redirect to the organization page
-    if (auth().orgId) {
-      path = `/organization/${auth().orgId}`;
+      if (auth.orgId) {
+        path = `/organization/${auth.orgId}`;
+      }
+
+      const orgSelection = new URL(path, req.url);
+      return NextResponse.redirect(orgSelection);
     }
 
-    const orgSelection = new URL(path, req.url);
+    if (!auth.userId && !auth.isPublicRoute) {
+      return redirectToSignIn({ returnBackUrl: req.url });
+    }
 
-    // Redirect to the appropriate organization selection or organization page
-    return NextResponse.redirect(orgSelection);
-  }
-
-  // If the user is not authenticated and the route is protected, redirect to sign-in
-  if (!auth().userId && isProtectedRoute(req)) {
-    return auth().redirectToSignIn({ returnBackUrl: req.url });
-  }
-
-  // If the user is authenticated but not part of an organization, redirect to organization selection
-  if (
-    auth().userId &&
-    !auth().orgId &&
-    req.nextUrl.pathname !== "/select-org"
-  ) {
-    const orgSelection = new URL("/select-org", req.url);
-    return NextResponse.redirect(orgSelection);
-  }
+    if (auth.userId && !auth.orgId && req.nextUrl.pathname !== "/select-org") {
+      const orgSelection = new URL("/select-org", req.url);
+      return NextResponse.redirect(orgSelection);
+    }
+  },
 });
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
