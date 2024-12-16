@@ -1,17 +1,18 @@
 "use client";
 
-import { useState, useEffect, useRef, ElementRef } from "react";
+import { useState, useRef, ElementRef } from "react";
 import { toast } from "sonner";
 import { useEventListener } from "usehooks-ts";
 import { List } from "@prisma/client";
 
 import { FormInput } from "@/components/form/form-input";
-
-import { updateList } from "@/actions/update-list";
+import { ListOptions } from "./list-options";
 import { useAction } from "@/hooks/use-actions";
+import { updateList } from "@/actions/update-list";
 
 type ListHeaderProps = {
   data: List;
+  onAddCard: () => void;
 };
 
 export const ListHeader = ({ data }: ListHeaderProps) => {
@@ -108,6 +109,8 @@ export const ListHeader = ({ data }: ListHeaderProps) => {
           {data.title}
         </div>
       )}
+
+      <ListOptions data={data} onAddCard={() => {}} />
     </div>
   );
 };
