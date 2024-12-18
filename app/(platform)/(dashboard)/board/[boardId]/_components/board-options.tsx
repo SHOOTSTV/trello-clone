@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover";
 
 import { deleteBoard } from "@/actions/delete-board";
-import { useAction } from "@/hooks/use-actions";
+import { useAction } from "@/hooks/use-action";
 
 interface BoardOptionsProps {
   id: string;

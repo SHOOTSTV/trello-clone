@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { FormSubmit } from "@/components/form/form-submit";
 import { deleteList } from "@/actions/delete-list";
 import { copyList } from "@/actions/copy-list";
-import { useAction } from "@/hooks/use-actions";
+import { useAction } from "@/hooks/use-action";
 
 type ListOptionsProps = {
   data: List;

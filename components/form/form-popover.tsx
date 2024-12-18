@@ -17,7 +17,7 @@ import { FormInput } from "@/components/form/form-input";
 import { FormSubmit } from "@/components/form/form-submit";
 import { FormPicker } from "@/components/form/form-picker";
 import { createBoard } from "@/actions/create-board";
-import { useAction } from "@/hooks/use-actions";
+import { useAction } from "@/hooks/use-action";
 
 interface FormPopoverProps {
   children: React.ReactNode;
