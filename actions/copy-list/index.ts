@@ -1,12 +1,16 @@
 "use server";
 
+import type { InputType, ReturnType } from "./types";
+
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs";
+import { ACTION, ENTITY_TYPE } from "@prisma/client";
 
-import { CopyList } from "./schema";
-import { InputType, ReturnType } from "./types";
 import { db } from "@/lib/db";
 import { createSafeAction } from "@/lib/create-safe-action";
+import { createAuditLog } from "@/lib/create-audit-log";
+
+import { CopyList } from "./schema";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth();
@@ -36,9 +40,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     });
 
     if (!listToCopy) {
-      return {
-        error: "List not found.",
-      };
+      return { error: "List not found" };
     }
 
     const lastList = await db.list.findFirst({
@@ -47,32 +49,37 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       select: { order: true },
     });
 
-    const newOrder = lastList ? lastList.order + 1 : 1;
+    const newOrder = lastList ? lastList?.order + 1 : 1;
 
     list = await db.list.create({
       data: {
         boardId: listToCopy.boardId,
-        title: `${listToCopy.title} — Copy`,
+        title: `${listToCopy.title} - Copy`,
         order: newOrder,
         cards: {
           createMany: {
-            data: listToCopy.cards.map((card) => ({
-              title: card.title,
-              description: card.description,
-              order: card.order,
+            data: listToCopy.cards.map(({ title, description, order }) => ({
+              title,
+              description,
+              order,
             })),
           },
         },
       },
+      include: { cards: true },
+    });
+
+    await createAuditLog({
+      entityId: list.id,
+      entityTitle: list.title,
+      entityType: ENTITY_TYPE.LIST,
+      action: ACTION.CREATE,
     });
   } catch (error) {
-    return {
-      error: "Failed to copy.",
-    };
+    return { error: "Failed to copy." };
   }
 
   revalidatePath(`/board/${boardId}`);
-
   return { data: list };
 };
 
