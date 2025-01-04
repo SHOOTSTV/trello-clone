@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const Info = () => {
+export const Info = ({ isPro }: { isPro: boolean }) => {
   const { organization, isLoaded } = useOrganization();
 
   if (!isLoaded) return <Info.Skeleton />;
@@ -25,7 +25,7 @@ export const Info = () => {
         <p className="text-xl font-semibold">{organization?.name}</p>
         <div className="flex items-center text-xs text-muted-foreground">
           <CreditCard className="mr-1 size-3" />
-          Free
+          {isPro ? "Pro" : "Free"}
         </div>
       </div>
     </div>
