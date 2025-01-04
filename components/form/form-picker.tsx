@@ -19,9 +19,23 @@ interface FormPickerProps {
 export const FormPicker = ({ id, errors }: FormPickerProps) => {
   const { pending } = useFormStatus();
 
-  const [images, setImages] = useState<Array<Record<string, any>>>([]);
+  interface UnsplashImage {
+    id: string;
+    urls: {
+      thumb: string;
+      full: string;
+    };
+    links: {
+      html: string;
+    };
+    user: {
+      name: string;
+    };
+  }
+
+  const [images, setImages] = useState<Array<UnsplashImage>>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedImageId, setSelectedImageId] = useState(null);
+  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -32,7 +46,7 @@ export const FormPicker = ({ id, errors }: FormPickerProps) => {
         });
 
         if (result && result.response) {
-          const newImages = result.response as Array<Record<string, any>>;
+          const newImages = result.response as Array<UnsplashImage>;
           setImages(newImages);
         } else {
           console.error("Failed to get images from Unsplash.");
@@ -62,7 +76,7 @@ export const FormPicker = ({ id, errors }: FormPickerProps) => {
             key={image.id}
             className={cn(
               "relative aspect-video group hover:opacity-75 transition bg-muted",
-              pending && "opcity-50 hover:opacity-50 cursor-auto"
+              pending && "opacity-50 hover:opacity-50 cursor-auto"
             )}
             onClick={() => {
               if (pending) return;

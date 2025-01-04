@@ -3,7 +3,7 @@
 import type { ListWithCards } from "@/types";
 
 import { useEffect, useState } from "react";
-import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 
 import { useAction } from "@/hooks/use-action";
 import { updateListOrder } from "@/actions/update-list-order";
@@ -50,13 +50,13 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
     setOrderedData(data);
   }, [data]);
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = (result: DropResult) => {
     const { destination, source, type } = result;
     if (!destination) return;
 
     // if dropped in the same position
     if (
-      destination.droppabledId === source.droppabledId &&
+      destination.droppableId === source.droppableId &&
       destination.index === source.index
     ) {
       return;

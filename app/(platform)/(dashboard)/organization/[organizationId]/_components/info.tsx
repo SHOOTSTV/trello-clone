@@ -14,7 +14,7 @@ export const Info = ({ isPro }: { isPro: boolean }) => {
     <div className="flex items-center gap-x-4">
       <div className="relative size-[60px]">
         <Image
-          src={organization?.imageUrl!}
+          src={organization?.imageUrl || "/default-image.png"}
           alt="Organization"
           height={60}
           width={60}

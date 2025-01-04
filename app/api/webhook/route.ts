@@ -4,8 +4,6 @@ import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { STRING_LITERAL_DROP_BUNDLE } from "next/dist/shared/lib/constants";
-import { subscribe } from "diagnostics_channel";
 
 export async function POST(req: Request) {
   const body = await req.text();
