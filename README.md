@@ -72,10 +72,17 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 STRIPE_WEBHOOK_SECRET=XXXXXXXXXX
 ```
 
-4. Run the Prisma migrations
+4. Setup Database
 
 ```bash
-npx prisma migrate dev
+# Generate Prisma Client
+npx prisma generate
+
+# Push the database schema
+npx prisma db push
+
+# If you want to see the database in Prisma Studio
+npx prisma studio
 ```
 
 5. Start the development server
