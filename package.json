@@ -29,7 +29,7 @@
     "eslint-plugin-tailwindcss": "^3.17.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.451.0",
-    "next": "^14.2.19",
+    "next": "^14.2.32",
     "react": "^18",
     "react-dom": "^18",
     "sonner": "^1.7.0",
